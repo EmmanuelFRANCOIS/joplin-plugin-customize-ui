@@ -1,63 +1,60 @@
 import joplin from 'api';
 import { registerSettings } from './settings';
-import { buildChromeCss, buildNoteCss } from './css';
+import { buildCss } from './css';
 import * as fs from 'fs';
 import * as path from 'path';
 
-/**
- * Liste explicite des settings gérés par le plugin
- * (obligatoire : l’API ne fournit pas settings.keys())
- */
-const SETTINGS_KEYS = [
-  // Notebooks
-  'nb_bg', 'nb_item_height', 'nb_indent', 'nb_pad_y', 'nb_font_size',
-  'nb_root_bold', 'nb_root_case', 'nb_child_bold', 'nb_child_case',
-  'nb_title_color', 'nb_sel_bg', 'nb_sel_title_color',
+let applyTimer: NodeJS.Timeout | null = null;
 
-  // Notes list
-  'nl_bg', 'nl_item_height', 'nl_pad_y', 'nl_font_size',
-  'nl_title_color', 'nl_sel_bg', 'nl_sel_title_color',
-
-  // Editor
-  'ed_tb_wrap', 'ed_tb_bg', 'ed_tb_icon',
-
-  // Note content
-  'md_font_family', 'md_font_size', 'md_h_color', 'md_h_bg',
-  'md_h_case', 'md_h_border_color', 'md_h_border_width',
-  'md_h_border_style', 'md_h_border_side',
-];
-
-
-async function applyCss() {
-  const values = await joplin.settings.values(SETTINGS_KEYS);
-
+async function applyCssNow() {
+  const css = await buildCss();
   const dataDir = await joplin.plugins.dataDir();
-  const chromePath = path.join(dataDir, 'sap.chrome.css');
-  const notePath = path.join(dataDir, 'sap.note.css');
 
-  await fs.promises.writeFile(
-    chromePath,
-    buildChromeCss(values),
-    'utf8'
-  );
+  const chromeCssPath = path.join(dataDir, 'customize-ui.chrome.css');
+  const noteCssPath = path.join(dataDir, 'customize-ui.note.css');
 
-  await fs.promises.writeFile(
-    notePath,
-    buildNoteCss(values),
-    'utf8'
-  );
+  await fs.promises.writeFile(chromeCssPath, css, 'utf8');
+  await fs.promises.writeFile(noteCssPath, css, 'utf8');
 
-  await joplin.window.loadChromeCssFile(chromePath);
-  await joplin.window.loadNoteCssFile(notePath);
+  // UI (sidebar, notes list, editor toolbar, etc.)
+  await joplin.window.loadChromeCssFile(chromeCssPath);
+
+  // Note viewer / rendered markdown (si ton CSS cible .rendered-md, etc.)
+  await joplin.window.loadNoteCssFile(noteCssPath);
+}
+
+/**
+ * Débounce pour éviter de réécrire/recharger le CSS en rafale
+ * quand plusieurs settings changent rapidement.
+ */
+function scheduleApplyCss(delayMs = 80) {
+  if (applyTimer) clearTimeout(applyTimer);
+  applyTimer = setTimeout(() => {
+    applyTimer = null;
+    void applyCssNow();
+  }, delayMs);
 }
 
 joplin.plugins.register({
   onStart: async () => {
     await registerSettings();
-    await applyCss();
 
-    joplin.settings.onChange(async () => {
-      await applyCss();
+    // Injection initiale
+    await applyCssNow();
+
+    // Quand un setting change
+    await joplin.settings.onChange(() => {
+      scheduleApplyCss(80);
+    });
+
+    // Quand la note sélectionnée change (l’éditeur peut être remonté / rerender)
+    await joplin.workspace.onNoteSelectionChange(() => {
+      scheduleApplyCss(80);
+    });
+
+    // Quand le contenu de la note change (utile si tu styles aussi le rendu/éditeur)
+    await joplin.workspace.onNoteChange(() => {
+      scheduleApplyCss(120);
     });
   },
 });
