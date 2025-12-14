@@ -13,36 +13,13 @@ export async function registerSettings() {
        H1 – TITRE DU PLUGIN
        ====================================================== */
 
-    ui_h1_top: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '════════════════════════════════════════',
-    },
-
     ui_h1_title: {
       value: '',
       type: SettingItemType.String,
       section: 'sap',
       public: true,
       label: 'CUSTOMIZE JOPLIN UI',
-    },
-
-    ui_h1_bottom: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '════════════════════════════════════════',
-    },
-
-    ui_h1_spacer: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '',
+      description: '════════════════════════════════════════',
     },
 
     /* ======================================================
@@ -55,14 +32,7 @@ export async function registerSettings() {
       section: 'sap',
       public: true,
       label: 'CARNETS (SIDEBAR)',
-    },
-
-    ui_nb_sep: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '────────────────────────────────────────',
+      description: '────────────────────────────────────────',
     },
 
     nb_bg: {
@@ -169,14 +139,6 @@ export async function registerSettings() {
       label: 'Couleur du titre sélectionné',
     },
 
-    ui_nb_spacer: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '',
-    },
-
     /* ======================================================
        SECTION – LISTE DES NOTES
        ====================================================== */
@@ -187,14 +149,7 @@ export async function registerSettings() {
       section: 'sap',
       public: true,
       label: 'LISTE DES NOTES',
-    },
-
-    ui_nl_sep: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '────────────────────────────────────────',
+      description: '────────────────────────────────────────',
     },
 
     nl_bg: {
@@ -259,14 +214,6 @@ export async function registerSettings() {
       label: 'Couleur du titre sélectionné',
     },
 
-    ui_nl_spacer: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '',
-    },
-
     /* ======================================================
        SECTION – ÉDITEUR
        ====================================================== */
@@ -277,14 +224,7 @@ export async function registerSettings() {
       section: 'sap',
       public: true,
       label: 'ÉDITEUR',
-    },
-
-    ui_ed_sep: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '────────────────────────────────────────',
+      description: '────────────────────────────────────────',
     },
 
     ed_tb_wrap: {
@@ -311,14 +251,6 @@ export async function registerSettings() {
       label: 'Couleur des icônes',
     },
 
-    ui_ed_spacer: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '',
-    },
-
     /* ======================================================
        SECTION – MARKDOWN RENDU
        ====================================================== */
@@ -329,14 +261,7 @@ export async function registerSettings() {
       section: 'sap',
       public: true,
       label: 'MARKDOWN RENDU',
-    },
-
-    ui_md_sep: {
-      value: '',
-      type: SettingItemType.String,
-      section: 'sap',
-      public: true,
-      label: '────────────────────────────────────────',
+      description: '────────────────────────────────────────',
     },
 
     md_font_family: {
