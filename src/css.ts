@@ -1,5 +1,5 @@
 
-import { TextCase } from './settings';
+type TextCase = 'none' | 'uppercase' | 'capitalize';
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 const s = (v: any, fb: string) => (typeof v === 'string' && v.trim() ? v.trim() : fb);
