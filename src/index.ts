@@ -9,45 +9,24 @@ import * as path from 'path';
  * (obligatoire : l’API ne fournit pas settings.keys())
  */
 const SETTINGS_KEYS = [
-  // Carnets
-  'nb_bg',
-  'nb_item_height',
-  'nb_indent',
-  'nb_pad_y',
-  'nb_font_size',
-  'nb_root_bold',
-  'nb_root_case',
-  'nb_child_bold',
-  'nb_child_case',
-  'nb_title_color',
-  'nb_sel_bg',
-  'nb_sel_title_color',
+  // Notebooks
+  'nb_bg', 'nb_item_height', 'nb_indent', 'nb_pad_y', 'nb_font_size',
+  'nb_root_bold', 'nb_root_case', 'nb_child_bold', 'nb_child_case',
+  'nb_title_color', 'nb_sel_bg', 'nb_sel_title_color',
 
-  // Notes
-  'nl_bg',
-  'nl_item_height',
-  'nl_pad_y',
-  'nl_font_size',
-  'nl_title_color',
-  'nl_sel_bg',
-  'nl_sel_title_color',
+  // Notes list
+  'nl_bg', 'nl_item_height', 'nl_pad_y', 'nl_font_size',
+  'nl_title_color', 'nl_sel_bg', 'nl_sel_title_color',
 
-  // Toolbar éditeur
-  'ed_tb_wrap',
-  'ed_tb_bg',
-  'ed_tb_icon',
+  // Editor
+  'ed_tb_wrap', 'ed_tb_bg', 'ed_tb_icon',
 
-  // Markdown rendu
-  'md_font_family',
-  'md_font_size',
-  'md_h_color',
-  'md_h_bg',
-  'md_h_case',
-  'md_h_border_color',
-  'md_h_border_width',
-  'md_h_border_style',
-  'md_h_border_side',
+  // Note content
+  'md_font_family', 'md_font_size', 'md_h_color', 'md_h_bg',
+  'md_h_case', 'md_h_border_color', 'md_h_border_width',
+  'md_h_border_style', 'md_h_border_side',
 ];
+
 
 async function applyCss() {
   const values = await joplin.settings.values(SETTINGS_KEYS);
