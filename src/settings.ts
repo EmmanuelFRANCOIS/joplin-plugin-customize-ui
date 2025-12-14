@@ -1,288 +1,76 @@
+
 import joplin from 'api';
 import { SettingItemType } from 'api/types';
 
+export type TextCase = 'none' | 'uppercase' | 'capitalize';
+
 export async function registerSettings() {
+  await joplin.settings.registerSection('sap_notebooks', {
+    label: 'Customize UI - Notebooks tree',
+    iconName: 'fas fa-palette',
+  });
 
-  /* =====================================================
-     SECTION 1 – NOTEBOOK TREE
-     ===================================================== */
+  await joplin.settings.registerSection('sap_notes', {
+    label: 'Customize UI - Notes list',
+    iconName: 'fas fa-palette',
+  });
 
-  await joplin.settings.registerSection('ui_notebooks', {
-    label: 'Customize UI – Notebook tree',
-    iconName: 'fas fa-sitemap',
+  await joplin.settings.registerSection('sap_editor', {
+    label: 'Customize UI - Editor',
+    iconName: 'fas fa-palette',
+  });
+
+  await joplin.settings.registerSection('sap_markdown', {
+    label: 'Customize UI - Note content',
+    iconName: 'fas fa-palette',
   });
 
   await joplin.settings.registerSettings({
-    nb_bg: {
-      value: '#1e1e1e',
-      type: SettingItemType.String,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Background color',
-    },
-    nb_item_height: {
-      value: 28,
-      type: SettingItemType.Int,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Item height (px)',
-      minimum: 20,
-      maximum: 48,
-    },
-    nb_indent: {
-      value: 14,
-      type: SettingItemType.Int,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Indent per level (px)',
-      minimum: 0,
-      maximum: 40,
-    },
-    nb_pad_y: {
-      value: 2,
-      type: SettingItemType.Int,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Vertical padding (px)',
-      minimum: 0,
-      maximum: 12,
-    },
-    nb_font_size: {
-      value: 12,
-      type: SettingItemType.Int,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Font size (px)',
-      minimum: 10,
-      maximum: 18,
-    },
-    nb_root_bold: {
-      value: true,
-      type: SettingItemType.Bool,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Root notebooks in bold',
-    },
-    nb_root_case: {
-      value: 'uppercase',
-      type: SettingItemType.String,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Root notebooks case (none / uppercase / capitalize)',
-    },
-    nb_child_bold: {
-      value: false,
-      type: SettingItemType.Bool,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Child notebooks in bold',
-    },
-    nb_child_case: {
-      value: 'none',
-      type: SettingItemType.String,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Child notebooks case (none / uppercase / capitalize)',
-    },
-    nb_title_color: {
-      value: '#d4d4d4',
-      type: SettingItemType.String,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Title color',
-    },
-    nb_sel_bg: {
-      value: '#2a2a2a',
-      type: SettingItemType.String,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Selected background color',
-    },
-    nb_sel_title_color: {
-      value: '#99cc66',
-      type: SettingItemType.String,
-      section: 'ui_notebooks',
-      public: true,
-      label: 'Selected title color',
-    },
-  });
+    /* =========================
+       Carnets
+       ========================= */
+    nb_bg: { value: '#1e1e1e', type: SettingItemType.String, section: 'sap_notebooks', public: true, label: 'Background arborescence' },
+    nb_item_height: { value: 28, type: SettingItemType.Int, section: 'sap_notebooks', public: true, label: 'Hauteur item (px)', minimum: 20, maximum: 48 },
+    nb_indent: { value: 14, type: SettingItemType.Int, section: 'sap_notebooks', public: true, label: 'Indentation par niveau (px)', minimum: 0, maximum: 40 },
+    nb_pad_y: { value: 2, type: SettingItemType.Int, section: 'sap_notebooks', public: true, label: 'Padding vertical interne (px)', minimum: 0, maximum: 12 },
+    nb_font_size: { value: 12, type: SettingItemType.Int, section: 'sap_notebooks', public: true, label: 'Taille police titres (px)', minimum: 10, maximum: 18 },
+    nb_root_bold: { value: true, type: SettingItemType.Bool, section: 'sap_notebooks', public: true, label: 'Roots en gras' },
+    nb_root_case: { value: 'uppercase', type: SettingItemType.String, section: 'sap_notebooks', public: true, label: 'Casse roots (none / uppercase / capitalize)' },
+    nb_child_bold: { value: false, type: SettingItemType.Bool, section: 'sap_notebooks', public: true, label: 'Childs en gras' },
+    nb_child_case: { value: 'none', type: SettingItemType.String, section: 'sap_notebooks', public: true, label: 'Casse childs (none / uppercase / capitalize)' },
+    nb_title_color: { value: '#d4d4d4', type: SettingItemType.String, section: 'sap_notebooks', public: true, label: 'Couleur titres' },
+    nb_sel_bg: { value: '#2a2a2a', type: SettingItemType.String, section: 'sap_notebooks', public: true, label: 'Background sélection' },
+    nb_sel_title_color: { value: '#99cc66', type: SettingItemType.String, section: 'sap_notebooks', public: true, label: 'Couleur titre sélectionné' },
 
-  /* =====================================================
-     SECTION 2 – NOTES LIST
-     ===================================================== */
+    /* =========================
+       Notes
+       ========================= */
+    nl_bg: { value: '#1e1e1e', type: SettingItemType.String, section: 'sap_notes', public: true, label: 'Background liste' },
+    nl_item_height: { value: 28, type: SettingItemType.Int, section: 'sap_notes', public: true, label: 'Hauteur item (px)', minimum: 20, maximum: 48 },
+    nl_pad_y: { value: 2, type: SettingItemType.Int, section: 'sap_notes', public: true, label: 'Padding vertical interne (px)', minimum: 0, maximum: 12 },
+    nl_font_size: { value: 12, type: SettingItemType.Int, section: 'sap_notes', public: true, label: 'Taille police titres (px)', minimum: 10, maximum: 18 },
+    nl_title_color: { value: '#d4d4d4', type: SettingItemType.String, section: 'sap_notes', public: true, label: 'Couleur titres' },
+    nl_sel_bg: { value: '#2a2a2a', type: SettingItemType.String, section: 'sap_notes', public: true, label: 'Background sélection' },
+    nl_sel_title_color: { value: '#99cc66', type: SettingItemType.String, section: 'sap_notes', public: true, label: 'Couleur titre sélectionné' },
 
-  await joplin.settings.registerSection('ui_notes_list', {
-    label: 'Customize UI – Notes list',
-    iconName: 'fas fa-list',
-  });
+    /* =========================
+       Toolbar éditeur
+       ========================= */
+    ed_tb_wrap: { value: 'ellipsis', type: SettingItemType.String, section: 'sap_editor', public: true, label: 'Disposition toolbar (ellipsis / wrap)' },
+    ed_tb_bg: { value: '#1e1e1e', type: SettingItemType.String, section: 'sap_editor', public: true, label: 'Background toolbar' },
+    ed_tb_icon: { value: '#d4d4d4', type: SettingItemType.String, section: 'sap_editor', public: true, label: 'Couleur icônes' },
 
-  await joplin.settings.registerSettings({
-    nl_bg: {
-      value: '#1e1e1e',
-      type: SettingItemType.String,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Background color',
-    },
-    nl_item_height: {
-      value: 28,
-      type: SettingItemType.Int,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Item height (px)',
-      minimum: 20,
-      maximum: 48,
-    },
-    nl_pad_y: {
-      value: 2,
-      type: SettingItemType.Int,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Vertical padding (px)',
-      minimum: 0,
-      maximum: 12,
-    },
-    nl_font_size: {
-      value: 12,
-      type: SettingItemType.Int,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Font size (px)',
-      minimum: 10,
-      maximum: 18,
-    },
-    nl_title_color: {
-      value: '#d4d4d4',
-      type: SettingItemType.String,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Title color',
-    },
-    nl_sel_bg: {
-      value: '#2a2a2a',
-      type: SettingItemType.String,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Selected background color',
-    },
-    nl_sel_title_color: {
-      value: '#99cc66',
-      type: SettingItemType.String,
-      section: 'ui_notes_list',
-      public: true,
-      label: 'Selected title color',
-    },
-  });
-
-  /* =====================================================
-     SECTION 3 – EDITOR
-     ===================================================== */
-
-  await joplin.settings.registerSection('ui_editor', {
-    label: 'Customize UI – Editor',
-    iconName: 'fas fa-edit',
-  });
-
-  await joplin.settings.registerSettings({
-    ed_tb_wrap: {
-      value: 'ellipsis',
-      type: SettingItemType.String,
-      section: 'ui_editor',
-      public: true,
-      label: 'Toolbar layout (ellipsis / wrap)',
-    },
-    ed_tb_bg: {
-      value: '#1e1e1e',
-      type: SettingItemType.String,
-      section: 'ui_editor',
-      public: true,
-      label: 'Toolbar background color',
-    },
-    ed_tb_icon: {
-      value: '#d4d4d4',
-      type: SettingItemType.String,
-      section: 'ui_editor',
-      public: true,
-      label: 'Toolbar icon color',
-    },
-  });
-
-  /* =====================================================
-     SECTION 4 – NOTE CONTENT (MARKDOWN RENDER)
-     ===================================================== */
-
-  await joplin.settings.registerSection('ui_note_content', {
-    label: 'Customize UI – Note content',
-    iconName: 'fas fa-file-alt',
-  });
-
-  await joplin.settings.registerSettings({
-    md_font_family: {
-      value: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Base font family',
-    },
-    md_font_size: {
-      value: 14,
-      type: SettingItemType.Int,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Base font size (px)',
-      minimum: 10,
-      maximum: 22,
-    },
-    md_h_color: {
-      value: '#e6e6e6',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings color (H1–H6)',
-    },
-    md_h_bg: {
-      value: 'transparent',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings background',
-    },
-    md_h_case: {
-      value: 'none',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings case (none / uppercase / capitalize)',
-    },
-    md_h_border_color: {
-      value: '#3a3a3a',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings border color',
-    },
-    md_h_border_width: {
-      value: 0,
-      type: SettingItemType.Int,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings border width (px)',
-      minimum: 0,
-      maximum: 8,
-    },
-    md_h_border_style: {
-      value: 'solid',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings border style',
-    },
-    md_h_border_side: {
-      value: 'left',
-      type: SettingItemType.String,
-      section: 'ui_note_content',
-      public: true,
-      label: 'Headings border side (left / bottom / none)',
-    },
+    /* =========================
+       Markdown rendu
+       ========================= */
+    md_font_family: { value: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Police de base' },
+    md_font_size: { value: 14, type: SettingItemType.Int, section: 'sap_markdown', public: true, label: 'Taille de base (px)', minimum: 10, maximum: 22 },
+    md_h_color: { value: '#e6e6e6', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Couleur titres H1–H6' },
+    md_h_bg: { value: 'transparent', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Background titres H1–H6' },
+    md_h_case: { value: 'none', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Casse titres (none / uppercase / capitalize)' },
+    md_h_border_color: { value: '#3a3a3a', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Couleur bordure titres' },
+    md_h_border_width: { value: 0, type: SettingItemType.Int, section: 'sap_markdown', public: true, label: 'Épaisseur bordure (px)', minimum: 0, maximum: 8 },
+    md_h_border_style: { value: 'solid', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Style bordure' },
+    md_h_border_side: { value: 'left', type: SettingItemType.String, section: 'sap_markdown', public: true, label: 'Côté bordure (left / bottom / none)' },
   });
 }

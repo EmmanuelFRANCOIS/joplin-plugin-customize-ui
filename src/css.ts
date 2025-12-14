@@ -1,183 +1,129 @@
-import joplin from 'api';
+import { TextCase } from './settings';
 
-export async function buildCss(): Promise<string> {
-  const v = async (k: string) => await joplin.settings.value(k);
+const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+const s = (v: any, fb: string) => (typeof v === 'string' && v.trim() ? v.trim() : fb);
 
-  /* =====================================================
-     NOTEBOOK TREE
-     ===================================================== */
-
-  const nb_bg = await v('nb_bg');
-  const nb_item_height = await v('nb_item_height');
-  const nb_indent = await v('nb_indent');
-  const nb_pad_y = await v('nb_pad_y');
-  const nb_font_size = await v('nb_font_size');
-  const nb_root_bold = await v('nb_root_bold');
-  const nb_root_case = await v('nb_root_case');
-  const nb_child_bold = await v('nb_child_bold');
-  const nb_child_case = await v('nb_child_case');
-  const nb_title_color = await v('nb_title_color');
-  const nb_sel_bg = await v('nb_sel_bg');
-  const nb_sel_title_color = await v('nb_sel_title_color');
-
-  /* =====================================================
-     NOTES LIST
-     ===================================================== */
-
-  const nl_bg = await v('nl_bg');
-  const nl_item_height = await v('nl_item_height');
-  const nl_pad_y = await v('nl_pad_y');
-  const nl_font_size = await v('nl_font_size');
-  const nl_title_color = await v('nl_title_color');
-  const nl_sel_bg = await v('nl_sel_bg');
-  const nl_sel_title_color = await v('nl_sel_title_color');
-
-  /* =====================================================
-     EDITOR
-     ===================================================== */
-
-  const ed_tb_wrap = await v('ed_tb_wrap');
-  const ed_tb_bg = await v('ed_tb_bg');
-  const ed_tb_icon = await v('ed_tb_icon');
-
-  /* =====================================================
-     NOTE CONTENT
-     ===================================================== */
-
-  const md_font_family = await v('md_font_family');
-  const md_font_size = await v('md_font_size');
-  const md_h_color = await v('md_h_color');
-  const md_h_bg = await v('md_h_bg');
-  const md_h_case = await v('md_h_case');
-  const md_h_border_color = await v('md_h_border_color');
-  const md_h_border_width = await v('md_h_border_width');
-  const md_h_border_style = await v('md_h_border_style');
-  const md_h_border_side = await v('md_h_border_side');
-
-  let css = '';
-
-  /* =====================================================
-     NOTEBOOK TREE (sidebar)
-     ===================================================== */
-
-  css += `
-/* Notebook tree */
-.sidebar .item-list {
-  background: ${nb_bg} !important;
+function textCase(v: any, fb: TextCase): TextCase {
+  return v === 'uppercase' || v === 'capitalize' || v === 'none' ? v : fb;
 }
 
-.sidebar .list-item-container {
-  min-height: ${nb_item_height}px !important;
-  padding-top: ${nb_pad_y}px !important;
-  padding-bottom: ${nb_pad_y}px !important;
-  font-size: ${nb_font_size}px !important;
-  color: ${nb_title_color} !important;
+export function buildChromeCss(raw: Record<string, any>): string {
+  const nbFont = clamp(raw.nb_font_size ?? 12, 10, 18);
+  const nbPadY = clamp(raw.nb_pad_y ?? 2, 0, 12);
+  const nbItemH = Math.max(
+    clamp(raw.nb_item_height ?? 28, 20, 48),
+    nbFont + nbPadY * 2 + 6
+  );
+
+  const nlFont = clamp(raw.nl_font_size ?? 12, 10, 18);
+  const nlPadY = clamp(raw.nl_pad_y ?? 2, 0, 12);
+  const nlItemH = Math.max(
+    clamp(raw.nl_item_height ?? 28, 20, 48),
+    nlFont + nlPadY * 2 + 6
+  );
+
+  return `
+/* =========================
+   Sidebar – Carnets
+   ========================= */
+
+.sidebar-list-items-wrapper{
+  background:${s(raw.nb_bg, '#1e1e1e')} !important;
 }
 
-/* Indentation */
-.sidebar .list-item-container {
-  padding-left: calc(var(--depth) * ${nb_indent}px) !important;
+.sidebar-list-items-wrapper .list-item-container{
+  height:${nbItemH}px !important;
+  padding:${nbPadY}px 6px !important;
 }
 
-/* Root notebooks */
-.sidebar .list-item-depth-0 .title {
-  font-weight: ${nb_root_bold ? 'bold' : 'normal'} !important;
-  text-transform: ${nb_root_case} !important;
+.sidebar-list-items-wrapper .list-item-wrapper{
+  padding-left:calc(var(--depth,1) * ${clamp(raw.nb_indent ?? 14, 0, 40)}px) !important;
 }
 
-/* Child notebooks */
-.sidebar .list-item-container:not(.list-item-depth-0) .title {
-  font-weight: ${nb_child_bold ? 'bold' : 'normal'} !important;
-  text-transform: ${nb_child_case} !important;
+.sidebar-list-items-wrapper .title{
+  font-size:${nbFont}px !important;
+  color:${s(raw.nb_title_color, '#d4d4d4')} !important;
 }
 
-/* Selected notebook */
-.sidebar .list-item-container.selected {
-  background: ${nb_sel_bg} !important;
+.sidebar-list-items-wrapper .list-item-container[aria-level="2"] .title{
+  font-weight:${raw.nb_root_bold ? 700 : 400} !important;
+  text-transform:${textCase(raw.nb_root_case, 'uppercase')} !important;
 }
 
-.sidebar .list-item-container.selected .title {
-  color: ${nb_sel_title_color} !important;
-}
-`;
-
-  /* =====================================================
-     NOTES LIST
-     ===================================================== */
-
-  css += `
-/* Notes list */
-.item-list.note-list {
-  background: ${nl_bg} !important;
+.sidebar-list-items-wrapper .list-item-container:not([aria-level="2"]) .title{
+  font-weight:${raw.nb_child_bold ? 700 : 400} !important;
+  text-transform:${textCase(raw.nb_child_case, 'none')} !important;
 }
 
-.item-list.note-list .list-item-container {
-  min-height: ${nl_item_height}px !important;
-  padding-top: ${nl_pad_y}px !important;
-  padding-bottom: ${nl_pad_y}px !important;
-  font-size: ${nl_font_size}px !important;
-  color: ${nl_title_color} !important;
+.sidebar-list-items-wrapper .list-item-container.selected{
+  background:${s(raw.nb_sel_bg, '#2a2a2a')} !important;
+}
+.sidebar-list-items-wrapper .list-item-container.selected .title{
+  color:${s(raw.nb_sel_title_color, '#99cc66')} !important;
 }
 
-.item-list.note-list .list-item-container.selected {
-  background: ${nl_sel_bg} !important;
+/* =========================
+   Liste – Notes
+   ========================= */
+
+.item-list.note-list{
+  background:${s(raw.nl_bg, '#1e1e1e')} !important;
 }
 
-.item-list.note-list .list-item-container.selected .title {
-  color: ${nl_sel_title_color} !important;
+.item-list.note-list .list-item-container{
+  height:${nlItemH}px !important;
+  padding:${nlPadY}px 8px !important;
+}
+
+.item-list.note-list .title{
+  font-size:${nlFont}px !important;
+  color:${s(raw.nl_title_color, '#d4d4d4')} !important;
+}
+
+.item-list.note-list .list-item-container.selected{
+  background:${s(raw.nl_sel_bg, '#2a2a2a')} !important;
+}
+.item-list.note-list .list-item-container.selected .title{
+  color:${s(raw.nl_sel_title_color, '#99cc66')} !important;
+}
+
+/* =========================
+   Toolbar éditeur
+   ========================= */
+
+.editor-toolbar{
+  background:${s(raw.ed_tb_bg, '#1e1e1e')} !important;
+  flex-wrap:${raw.ed_tb_wrap === 'wrap' ? 'wrap' : 'nowrap'} !important;
+}
+
+.editor-toolbar button i,
+.editor-toolbar button svg{
+  color:${s(raw.ed_tb_icon, '#d4d4d4')} !important;
+  fill:${s(raw.ed_tb_icon, '#d4d4d4')} !important;
 }
 `;
-
-  /* =====================================================
-     EDITOR TOOLBAR
-     ===================================================== */
-
-  css += `
-/* Editor toolbar */
-.editor-toolbar {
-  background: ${ed_tb_bg} !important;
-  flex-wrap: ${ed_tb_wrap === 'wrap' ? 'wrap' : 'nowrap'} !important;
 }
 
-.editor-toolbar button i {
-  color: ${ed_tb_icon} !important;
-}
-`;
+export function buildNoteCss(raw: Record<string, any>): string {
+  const border =
+    raw.md_h_border_width > 0 && raw.md_h_border_side !== 'none'
+      ? raw.md_h_border_side === 'bottom'
+        ? `border-bottom:${raw.md_h_border_width}px ${raw.md_h_border_style} ${s(raw.md_h_border_color,'#3a3a3a')};padding-bottom:6px;`
+        : `border-left:${raw.md_h_border_width}px ${raw.md_h_border_style} ${s(raw.md_h_border_color,'#3a3a3a')};padding-left:10px;`
+      : '';
 
-  /* =====================================================
-     NOTE CONTENT (rendered markdown)
-     ===================================================== */
-
-  const borderSide =
-    md_h_border_side === 'left'
-      ? 'border-left'
-      : md_h_border_side === 'bottom'
-      ? 'border-bottom'
-      : null;
-
-  css += `
-/* Markdown content */
-.rendered-md {
-  font-family: ${md_font_family} !important;
-  font-size: ${md_font_size}px !important;
+  return `
+.rendered-md{
+  font-family:${s(raw.md_font_family,'system-ui')} !important;
+  font-size:${clamp(raw.md_font_size ?? 14, 10, 22)}px !important;
 }
 
-.rendered-md h1,
-.rendered-md h2,
-.rendered-md h3,
-.rendered-md h4,
-.rendered-md h5,
-.rendered-md h6 {
-  color: ${md_h_color} !important;
-  background: ${md_h_bg} !important;
-  text-transform: ${md_h_case} !important;
-  ${
-    borderSide
-      ? `${borderSide}: ${md_h_border_width}px ${md_h_border_style} ${md_h_border_color} !important;`
-      : ''
-  }
+.rendered-md h1,.rendered-md h2,.rendered-md h3,
+.rendered-md h4,.rendered-md h5,.rendered-md h6{
+  color:${s(raw.md_h_color,'#e6e6e6')} !important;
+  background:${s(raw.md_h_bg,'transparent')} !important;
+  text-transform:${textCase(raw.md_h_case,'none')} !important;
+  ${border}
 }
 `;
-
-  return css;
 }
