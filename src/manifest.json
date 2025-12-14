@@ -1,0 +1,16 @@
+{
+	"manifest_version": 1,
+	"id": "com.efdev.JoplinPluginCustomizeUI",
+	"app_min_version": "3.5",
+	"version": "1.0.0",
+	"name": "Customize Joplin UI",
+	"description": "A Joplin plugin to customize its own UI.",
+	"author": "Emmanuel FRANCOIS - Calais - France",
+	"homepage_url": "https://emmanuelfrancois.fr/joplin-plugins/customize-joplin-ui",
+	"repository_url": "https://github.com/EmmanuelFRANCOIS/joplin-plugin-customize-ui",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {},
+	"promo_tile": {}
+}
